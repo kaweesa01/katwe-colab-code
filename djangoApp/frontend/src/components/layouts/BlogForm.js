@@ -2,9 +2,12 @@ import React, { Component, Fragment } from "react";
 import marked from "marked";
 import { connect } from "react-redux";
 import Proptypes from "prop-types";
+import { Link } from "react-router-dom";
+import { logoutUser } from "../../actions/auth";
+import { getUserBlog } from "../../actions/BlogActions";
+
 import {
   addBlog,
-  getBlog,
   deleteBlog,
   getEditBlog,
   editBlog,
@@ -19,6 +22,7 @@ class BlogForm extends Component {
       image: null,
       blog: "",
       imageUrl: null,
+      creator: this.props.user,
     };
     this.onChange = this.onChange.bind(this);
     this.handleImage = this.handleImage.bind(this);
@@ -32,7 +36,8 @@ class BlogForm extends Component {
   }
 
   componentDidMount() {
-    this.props.getBlog();
+   // this.props.getBlog();
+    this.props.getUserBlog();
   }
 
   componentDidUpdate(prevProps) {
@@ -44,16 +49,14 @@ class BlogForm extends Component {
   onSubmit(ev) {
     ev.preventDefault();
 
-    const { image, blog, id } = this.state;
+    const { image, blog, id, creator } = this.state;
 
     if (id === null) {
       const formData = new FormData();
       formData.append("image", image);
       formData.append("blog", blog);
+      formData.append("creator", creator);
 
-      const noImageBlog = {
-        blog: blog,
-      };
       this.props.addBlog(formData);
     } else if (id !== null) {
       const formData = new FormData();
@@ -78,6 +81,7 @@ class BlogForm extends Component {
 
   render() {
     const { posts } = this.props;
+    
     const blogs = posts.map((post) => {
       return (
         <div key={post.id}>
@@ -98,6 +102,8 @@ class BlogForm extends Component {
     return (
       <Fragment>
         <div>
+          <Link to="/">See blog posts</Link>
+          <button onClick={this.props.logoutUser}>Logout</button>
           <form onSubmit={this.onSubmit}>
             <textarea
               onChange={this.onChange}
@@ -120,7 +126,8 @@ class BlogForm extends Component {
         </div>
         <div>
           <div>
-            <h1>Your blogs</h1>
+            <h1> Welcome {this.props.user}</h1>
+            <h3>Your blog posts</h3>
           </div>
           {blogs}
         </div>
@@ -130,14 +137,16 @@ class BlogForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  posts: state.BlogReducer.blogPosts,
+  posts: state.BlogReducer.userBlogPosts,
   blogEdit: state.BlogReducer.blogEdit,
+  user: state.auth.user.username,
 });
 
 export default connect(mapStateToProps, {
   addBlog,
-  getBlog,
   deleteBlog,
   getEditBlog,
   editBlog,
+  logoutUser,
+  getUserBlog,
 })(BlogForm);

@@ -1,7 +1,7 @@
-import React, { Component } from "React";
-import "../style/formStyle.css";
+import React, { Component } from "react";
+// import "../style/formStyle.css";
 import { Link, Redirect } from "react-router-dom";
-import { createMessage, register } from "../actions/auth";
+import { register } from "../actions/auth";
 import { connect } from "react-redux";
 
 class RegisterForm extends Component {
@@ -32,7 +32,6 @@ class RegisterForm extends Component {
         email,
         password,
       };
-      console.log(user);
       this.props.register(user);
     }
   }
@@ -45,11 +44,12 @@ class RegisterForm extends Component {
 
   render() {
     if (this.props.isAuthenticated) {
-      document.documentElement.style.setProperty("--topMargin", "120px");
-      return <Redirect to="/" />;
-    } else {
-      document.documentElement.style.setProperty("--topMargin", "20px");
+     // document.documentElement.style.setProperty("--topMargin", "120px");
+      return <Redirect to="/blogForm" />;
     }
+    // } else {
+    //   document.documentElement.style.setProperty("--topMargin", "20px");
+    // }
 
     const { username, password1, email, password2 } = this.state;
     return (
@@ -117,6 +117,7 @@ class RegisterForm extends Component {
               <div className="psw">
                 <span>
                   <Link to="/login">Already have an account.</Link>
+                  <Link to="/">Back to blog posts</Link>
                 </span>
               </div>
             </div>
@@ -131,6 +132,6 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { createMessage, register })(
+export default connect(mapStateToProps, { register })(
   RegisterForm
 );

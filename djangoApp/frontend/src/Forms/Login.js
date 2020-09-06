@@ -1,5 +1,5 @@
-import React, { Component } from "React";
-import "../style/formStyle.css";
+import React, { Component } from "react";
+// import "../style/formStyle.css";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
@@ -29,11 +29,17 @@ class LoginForm extends Component {
 
   render() {
     if (this.props.isAuthenticated) {
-      document.documentElement.style.setProperty("--topMargin", "120px");
-      return <Redirect to="/" />;
-    }else{
-      document.documentElement.style.setProperty("--topMargin", "20px");
+      //document.documentElement.style.setProperty("--topMargin", "120px");
+
+      if (this.props.user.username === "superuser") {
+        return <Redirect to="/adminBoard" />;
+      } else if (this.props.user.username !== "superuser") {
+        return <Redirect to="/blogForm" />;
+      }
     }
+    // }else{
+    //   document.documentElement.style.setProperty("--topMargin", "20px");
+    // }
 
     const { username, password } = this.state;
     return (
@@ -75,6 +81,7 @@ class LoginForm extends Component {
               <div className="psw">
                 <span>
                   <Link to="/register">Don't have an Account?</Link>
+                  <Link to="/">Back to blog posts</Link>
                 </span>
               </div>
             </div>
@@ -87,6 +94,7 @@ class LoginForm extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { login })(LoginForm);

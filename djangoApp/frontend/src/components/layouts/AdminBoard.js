@@ -1,19 +1,17 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { getBlog, getUserBlog } from "../../actions/BlogActions";
 import marked from "marked";
+import { getBlog, adminDeleteBlog } from "../../actions/BlogActions";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { loadUser } from "../../actions/auth";
+import {logoutUser} from '../../actions/auth'
 
-class BlogPost extends Component {
+class AdminBoard extends Component {
   constructor() {
     super();
   }
 
   componentDidMount() {
     this.props.getBlog();
-    this.props.loadUser();
-    this.props.getUserBlog();
   }
 
   getMarkdownText(blog) {
@@ -24,7 +22,7 @@ class BlogPost extends Component {
   render() {
     const { posts } = this.props;
 
-    const postCard = posts.map((post) => {
+    const blogs = posts.map((post) => {
       return (
         <div key={post.id}>
           <div>
@@ -37,23 +35,28 @@ class BlogPost extends Component {
           <div>
             <img width="200px" height="200px" src={post.image} />
           </div>
+          <button onClick={this.props.adminDeleteBlog.bind(this, post.id)}>
+            Delete
+          </button>
         </div>
       );
     });
 
     return (
       <div>
-        <div>
-          <Link to="/blogForm">Blog with us</Link>
-        </div>
-        {postCard}
+        {/* <Link to="/">See blog posts</Link> */}
+        <button onClick={this.props.logoutUser}>Logout</button>
+        <h1>Welcome to admin board</h1>
+        {blogs}
       </div>
     );
   }
 }
 
-const mapSateToProps = (state) => ({
+const mapStateToProps = (state) => ({
   posts: state.BlogReducer.blogPosts,
 });
 
-export default connect(mapSateToProps, { getBlog, loadUser,getUserBlog })(BlogPost);
+export default connect(mapStateToProps, { getBlog, adminDeleteBlog,logoutUser })(
+  AdminBoard
+);
