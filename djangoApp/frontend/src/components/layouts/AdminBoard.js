@@ -53,7 +53,7 @@ class AdminBoard extends Component {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
-              Katwe Kolab
+              Katwe colab
             </a>
             <button
               className="navbar-toggler"
@@ -103,7 +103,7 @@ class AdminBoard extends Component {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search for..."
+                      placeholder="Search by blogger..."
                     />
                     <span className="input-group-append">
                       <button className="btn btn-secondary" type="button">

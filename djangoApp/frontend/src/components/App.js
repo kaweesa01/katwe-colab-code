@@ -13,9 +13,9 @@ import RegisterForm from "../components/../Forms/Register";
 import PrivateRoute from "../PrivateRoutes/Private";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
-import AdminBoard from '../components/layouts/AdminBoard'
+import AdminBoard from "../components/layouts/AdminBoard";
 
-import '../../styles/css/bootstrap.min.css'
+import "../../styles/css/bootstrap.min.css";
 
 class App extends Component {
   render() {
@@ -23,6 +23,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <Fragment>
+            {/* <BlogForm /> */}
             <Switch>
               <PrivateRoute exact path="/blogForm" component={BlogForm} />
               <PrivateRoute exact path="/adminBoard" component={AdminBoard} />

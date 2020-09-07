@@ -59,7 +59,7 @@ class LoginForm extends Component {
 
     const { username, password } = this.state;
     return (
-      <div className="main-container vh-100">
+      <div className="main-container">
         <div className="logo">
           <img className="logo-img" alt="katwe-colab-logo" src={this.state.logoUrl} />
         </div>

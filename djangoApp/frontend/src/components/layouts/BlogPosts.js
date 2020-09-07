@@ -38,7 +38,7 @@ class BlogPost extends Component {
     const postCard = posts.map((post) => {
       return (
         <div key={post.id} className="card mb-4">
-          <img className="card-img-top" src={post.image} alt="Card image cap" />
+          <img className="card-img-top" height="" src={post.image} alt="Card image cap" />
           <div className="card-body">
             <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
             <a href="#" className="btn btn-primary">
@@ -57,7 +57,7 @@ class BlogPost extends Component {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
-              Katwe Kolab
+              Katwe colab
             </a>
             <button
               className="navbar-toggler"
@@ -104,7 +104,7 @@ class BlogPost extends Component {
             {/* <!-- Blog Entries Column --> */}
             <div className="col-md-8">
               <h1 className="my-4">
-                Katwe Kolab <br />
+                Katwe colab <br />
                 <small>Knowledge sharing center</small>
               </h1>
 
@@ -121,7 +121,7 @@ class BlogPost extends Component {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search for..."
+                      placeholder="Search by blogger..."
                     />
                     <span className="input-group-append">
                       <button className="btn btn-secondary" type="button">

@@ -36,7 +36,7 @@ class BlogForm extends Component {
   }
 
   componentDidMount() {
-   // this.props.getBlog();
+    // this.props.getBlog();
     this.props.getUserBlog();
   }
 
@@ -81,18 +81,24 @@ class BlogForm extends Component {
 
   render() {
     const { posts } = this.props;
-    
+
     const blogs = posts.map((post) => {
       return (
-        <div key={post.id}>
-          <div>
+        <div className="card m-2" key={post.id}>
+          <div className="card-body">
             <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
           </div>
-          <div>
-            <button onClick={this.props.getEditBlog.bind(this, post.id)}>
+          <div className="card-footer">
+            <button
+              className="btn btn-primary m-1"
+              onClick={this.props.getEditBlog.bind(this, post.id)}
+            >
               Update
             </button>
-            <button onClick={this.props.deleteBlog.bind(this, post.id)}>
+            <button
+              className="btn btn-danger m-1"
+              onClick={this.props.deleteBlog.bind(this, post.id)}
+            >
               Delete
             </button>
           </div>
@@ -101,35 +107,116 @@ class BlogForm extends Component {
     });
     return (
       <Fragment>
-        <div>
-          <Link to="/">See blog posts</Link>
-          <button onClick={this.props.logoutUser}>Logout</button>
-          <form onSubmit={this.onSubmit}>
-            <textarea
-              onChange={this.onChange}
-              name="blog"
-              value={this.state.blog}
-              cols="20"
-              rows="20"
-            ></textarea>
-            <input multiple={false} type="file" onChange={this.handleImage} />
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+          <div className="container">
+            <a className="navbar-brand" href="#">
+              Katwe colab
+            </a>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarResponsive"
+              aria-controls="navbarResponsive"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarResponsive">
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item active">
+                  <a className="nav-link" href="#">
+                    Home
+                    <span className="sr-only">(current)</span>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">
+                    About
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">
+                    Services
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className="btn btn-danger"
+                    onClick={this.props.logoutUser}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
 
-            <button type="submit">Submit</button>
-          </form>
-          <div>
-            Current image:
-            <img width="200px" height="200px" src={this.state.imageUrl} />
+        {/* <!-- Page Content --> */}
+        <div className="container">
+          <div className="row">
+            {/* <!-- Blog Entries Column --> */}
+            <div className="col-md-8">
+              <h1 className="my-4">
+                Welcome {this.props.user} <br />
+                <small>Sharing your knowledge</small>
+              </h1>
+
+              <div className="card mb-4">
+                <form onSubmit={this.onSubmit}>
+                  <div className="card-img-top"></div>
+
+                  <div className="card-body">
+                    <textarea
+                      onChange={this.onChange}
+                      name="blog"
+                      value={this.state.blog}
+                      className="form-control"
+                      cols="50"
+                      rows="10"
+                    ></textarea>
+                  </div>
+
+                  <div className="card-footer text-muted">
+                    <input
+                      multiple={false}
+                      type="file"
+                      onChange={this.handleImage}
+                    />
+
+                    <button className="btn btn-secondary m-1" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* <!-- Sidebar Widgets Column --> */}
+            <div className="col-md-4">
+              <div className="card my-4">
+                <h5 className="card-header">Preview Area</h5>
+                <div className="card-body">
+                  <div
+                    dangerouslySetInnerHTML={this.getMarkdownText(
+                      this.state.blog
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* <!-- Side Widget --> */}
+
+              <div className="card my-4">
+                <h5 className="card-header">Your Posts</h5>
+                {this.props.posts.length === 0
+                  ? <p className="text-center lead">You haven't shared any knownledge</p>
+                  : blogs}
+              </div>
+            </div>
           </div>
-          <div
-            dangerouslySetInnerHTML={this.getMarkdownText(this.state.blog)}
-          />
-        </div>
-        <div>
-          <div>
-            <h1> Welcome {this.props.user}</h1>
-            <h3>Your blog posts</h3>
-          </div>
-          {blogs}
         </div>
       </Fragment>
     );
