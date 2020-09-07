@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
+import axios from "axios";
+import "../../styles/css/main.css";
 
 class LoginForm extends Component {
   constructor(props) {
@@ -10,6 +12,7 @@ class LoginForm extends Component {
     this.state = {
       username: "",
       password: "",
+      logoUrl: "",
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -25,6 +28,19 @@ class LoginForm extends Component {
     e.preventDefault();
     const { username, password } = this.state;
     this.props.login(username, password);
+  }
+
+  componentDidMount() {
+    axios
+      .get("/api/logo/")
+      .then((res) => {
+        this.setState({
+          logoUrl: res.data[0].image
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -43,46 +59,57 @@ class LoginForm extends Component {
 
     const { username, password } = this.state;
     return (
-      <div className="form-div">
-        <form onSubmit={this.onSubmit} className="Loginform">
-          <h1>Login Form</h1>
-          <div className="formcontainer">
-            <hr />
-            <div className="container">
-              <label>
-                <strong>Username</strong>
-              </label>
-              <input
-                type="text"
-                placeholder="Enter Username"
-                name="username"
-                value={username}
-                className="AcountInput"
-                onChange={this.onChange}
-                required
-              />
-              <label>
-                <strong>Password</strong>
-              </label>
-              <input
-                type="password"
-                placeholder="Enter Password"
-                name="password"
-                value={password}
-                className="AcountInput"
-                onChange={this.onChange}
-                required
-              />
-            </div>
-            <button className="AccountBtn" type="submit">
-              Login
-            </button>
-            <div className="have-Acco" style={{ backgroundColor: "#eee" }}>
-              <div className="psw">
-                <span>
-                  <Link to="/register">Don't have an Account?</Link>
-                  <Link to="/">Back to blog posts</Link>
-                </span>
+      <div className="main-container vh-100">
+        <div className="logo">
+          <img className="logo-img" alt="katwe-colab-logo" src={this.state.logoUrl} />
+        </div>
+        <form onSubmit={this.onSubmit} className="">
+          <h1 className="text-center mb-5">Login Form</h1>
+          <div className="container ">
+            <hr className="f-width" />
+            <div className="container d-flex flex-column align-items-center justify-content-center">
+              <div className="form-group">
+                <label>
+                  <strong>Username</strong>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter Username"
+                  name="username"
+                  value={username}
+                  className="form-control f-width"
+                  onChange={this.onChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  <strong>Password</strong>
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter Password"
+                  name="password"
+                  value={password}
+                  className="form-control f-width"
+                  onChange={this.onChange}
+                  required
+                />
+              </div>
+              <button className="btn btn-primary mb-2" type="submit">
+                Login
+              </button>
+              <div className="">
+                <div className="psw">
+                  <span className="link-container">
+                    <Link to="/register" className="link">
+                      Don't have an Account?
+                    </Link>
+                    <Link to="/" className="link">
+                      Back to blog posts
+                    </Link>
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -1,8 +1,17 @@
-from Blog.models import BlogModel
+from Blog.models import ImagesModel,BlogModel
 from rest_framework import permissions, viewsets
-from .serializers import BlogSerializer
+from .serializers import BlogSerializer,ImageSerializer
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
+
+# logo view set
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = ImagesModel.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = ImageSerializer
+    parser_classes = (JSONParser, FormParser, MultiPartParser)
 
 # Blog view set
 

@@ -15,6 +15,8 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import AdminBoard from '../components/layouts/AdminBoard'
 
+import '../../styles/css/bootstrap.min.css'
+
 class App extends Component {
   render() {
     return (

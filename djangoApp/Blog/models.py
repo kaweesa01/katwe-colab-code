@@ -19,3 +19,6 @@ class BlogModel(models.Model):
         
     def __str__(self):
         return self.owner.username
+    
+class ImagesModel(models.Model):
+    image = models.ImageField(upload_to='logo/', max_length=255, null=True, blank=True)
