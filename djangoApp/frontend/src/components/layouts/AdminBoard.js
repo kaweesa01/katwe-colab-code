@@ -1,6 +1,11 @@
 import React, { Component, Fragment } from "react";
 import marked from "marked";
-import { getBlog, adminDeleteBlog } from "../../actions/BlogActions";
+import {
+  getBlog,
+  adminDeleteBlog,
+  searchBlog,
+  cancelSearch,
+} from "../../actions/BlogActions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/auth";
@@ -8,6 +13,12 @@ import { logoutUser } from "../../actions/auth";
 class AdminBoard extends Component {
   constructor() {
     super();
+    this.state = {
+      search: "",
+    };
+    this.onChange = this.onChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.cancelSearch = this.cancelSearch.bind(this);
   }
 
   componentDidMount() {
@@ -25,28 +36,80 @@ class AdminBoard extends Component {
     return { __html: rawMarkup };
   }
 
-  render() {
+  onChange(ev) {
+    this.setState({
+      [ev.target.name]: ev.target.value,
+    });
+  }
+
+  handleSearch() {
+    const { search } = this.state;
     const { posts } = this.props;
 
-    const blogs = posts.map((post) => {
-      return (
-        <div key={post.id} className="card mb-4">
-          <img className="card-img-top" src={post.image} alt="Card image cap" />
-          <div className="card-body">
-            <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
-            <button
-              className="btn btn-danger"
-              onClick={this.props.adminDeleteBlog.bind(this, post.id)}
-            >
-              Delete
-            </button>
-          </div>
-          <div className="card-footer text-muted">
-            Posted on {this.dateFormatter(post.date)} by {post.creator}
-          </div>
-        </div>
-      );
+    this.props.searchBlog(posts, search);
+  }
+
+  cancelSearch() {
+    this.props.cancelSearch();
+    this.setState({
+      search: "",
     });
+  }
+
+  render() {
+    const { posts, searchPosts } = this.props;
+
+    var blogs = null;
+
+    if (searchPosts.length === 0) {
+      blogs = posts.map((post) => {
+        return (
+          <div key={post.id} className="card mb-4">
+            <img
+              className="card-img-top"
+              src={post.image}
+              alt="Card image cap"
+            />
+            <div className="card-body">
+              <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
+              <button
+                className="btn btn-danger"
+                onClick={this.props.adminDeleteBlog.bind(this, post.id)}
+              >
+                Delete
+              </button>
+            </div>
+            <div className="card-footer text-muted">
+              Posted on {this.dateFormatter(post.date)} by {post.creator}
+            </div>
+          </div>
+        );
+      });
+    } else {
+      blogs = searchPosts.map((post) => {
+        return (
+          <div key={post.id} className="card mb-4">
+            <img
+              className="card-img-top"
+              src={post.image}
+              alt="Card image cap"
+            />
+            <div className="card-body">
+              <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
+              <button
+                className="btn btn-danger"
+                onClick={this.props.adminDeleteBlog.bind(this, post.id)}
+              >
+                Delete
+              </button>
+            </div>
+            <div className="card-footer text-muted">
+              Posted on {this.dateFormatter(post.date)} by {post.creator}
+            </div>
+          </div>
+        );
+      });
+    }
 
     return (
       <Fragment>
@@ -98,15 +161,37 @@ class AdminBoard extends Component {
               {/* <!-- Search Widget --> */}
               <div className="card my-4">
                 <h5 className="card-header">Search</h5>
+                {this.props.errors.length === 0 ? null : this.props.errors[0]
+                      .msg ? (
+                    <div className="card-header">
+                      <div className="alert alert-danger alert-dismissible fade show">
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="alert"
+                        >
+                          &times;
+                        </button>
+                        <strong>Error!</strong> {this.props.errors[0].msg}
+                      </div>
+                    </div>
+                  ) : null}
                 <div className="card-body">
                   <div className="input-group">
                     <input
                       type="text"
                       className="form-control"
+                      value={this.state.search}
+                      name="search"
+                      onChange={this.onChange}
                       placeholder="Search by blogger..."
                     />
                     <span className="input-group-append">
-                      <button className="btn btn-secondary" type="button">
+                      <button
+                        className="btn btn-secondary"
+                        onClick={this.handleSearch}
+                        type="button"
+                      >
                         Go!
                       </button>
                     </span>
@@ -115,6 +200,24 @@ class AdminBoard extends Component {
               </div>
 
               {/* <!-- Side Widget --> */}
+
+              {this.props.searchPosts.length >= 1 ? (
+                <div className="card my-4">
+                  <h5 className="card-header">
+                    Results found {this.props.searchPosts.length}
+                  </h5>
+                  <div className="card-body">
+                    <button
+                      onClick={this.cancelSearch}
+                      className="btn btn-danger"
+                      type="button"
+                    >
+                      Cancel search
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               <div className="card my-4">
                 <h5 className="card-header">Quote of the day</h5>
                 <div className="card-body">
@@ -131,10 +234,14 @@ class AdminBoard extends Component {
 
 const mapStateToProps = (state) => ({
   posts: state.BlogReducer.blogPosts,
+  searchPosts: state.BlogReducer.searchArray,
+  errors: state.errors.errors,
 });
 
 export default connect(mapStateToProps, {
   getBlog,
   adminDeleteBlog,
   logoutUser,
+  searchBlog,
+  cancelSearch,
 })(AdminBoard);

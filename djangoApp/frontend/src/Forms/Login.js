@@ -35,8 +35,8 @@ class LoginForm extends Component {
       .get("/api/logo/")
       .then((res) => {
         this.setState({
-          logoUrl: res.data[0].image
-        })
+          logoUrl: res.data[0].image,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -61,11 +61,27 @@ class LoginForm extends Component {
     return (
       <div className="main-container">
         <div className="logo">
-          <img className="logo-img" alt="katwe-colab-logo" src={this.state.logoUrl} />
+          <img
+            className="logo-img"
+            alt="katwe-colab-logo"
+            src={this.state.logoUrl}
+          />
         </div>
         <form onSubmit={this.onSubmit} className="">
           <h1 className="text-center mb-5">Login Form</h1>
           <div className="container ">
+            {this.props.errors.length === 0 ? null : this.props.errors[0]
+                .non_field_errors ? (
+              <div className="card-header">
+                <div className="alert alert-danger alert-dismissible fade show">
+                  <button type="button" className="close" data-dismiss="alert">
+                    &times;
+                  </button>
+                  <strong>Error!</strong>{" "}
+                  {this.props.errors[0].non_field_errors}
+                </div>
+              </div>
+            ) : null}
             <hr className="f-width" />
             <div className="container d-flex flex-column align-items-center justify-content-center">
               <div className="form-group">
@@ -121,6 +137,7 @@ class LoginForm extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  errors: state.errors.errors,
   user: state.auth.user,
 });
 

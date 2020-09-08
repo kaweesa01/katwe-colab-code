@@ -3,10 +3,13 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { register } from "../actions/auth";
 import { connect } from "react-redux";
-import axios from 'axios'
+import axios from "axios";
 
 // import logo from "../../images/logo.png";
 import "../../styles/css/main.css";
+
+import store from "../store";
+import { GET_ERRORS } from "../actions/types";
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -30,7 +33,18 @@ class RegisterForm extends Component {
       const err = {
         pass: ["Passwords must mutch"],
       };
-      this.props.createMessage(err);
+      store.dispatch({
+        type: GET_ERRORS,
+        payload: err,
+      });
+    } else if (password.length < 8) {
+      const err = {
+        pass: ["Password must be atleast 8 Characters long"],
+      };
+      store.dispatch({
+        type: GET_ERRORS,
+        payload: err,
+      });
     } else {
       const user = {
         username,
@@ -52,8 +66,8 @@ class RegisterForm extends Component {
       .get("/api/logo/")
       .then((res) => {
         this.setState({
-          logoUrl: res.data[0].image
-        })
+          logoUrl: res.data[0].image,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -73,7 +87,11 @@ class RegisterForm extends Component {
     return (
       <div className="main-container vh-100">
         <div className="logo reg-logo">
-          <img className="logo-img" alt="katwe-colab-logo" src={this.state.logoUrl}/>
+          <img
+            className="logo-img"
+            alt="katwe-colab-logo"
+            src={this.state.logoUrl}
+          />
         </div>
         <form onSubmit={this.onSubmit} className="RegisterForm">
           <h1 className="text-center mb-5">SIGN UP</h1>
@@ -81,6 +99,18 @@ class RegisterForm extends Component {
             <i className="fas fa-user-circle"></i>
           </div>
           <div className="container">
+            {this.props.errors.length === 0 ? null : this.props.errors[0]
+                .username || this.props.errors[0].pass ? (
+              <div className="card-header">
+                <div className="alert alert-danger alert-dismissible fade show">
+                  <button type="button" className="close" data-dismiss="alert">
+                    &times;
+                  </button>
+                  <strong>Error!</strong>{" "}
+                  {this.props.errors[0].username || this.props.errors[0].pass}
+                </div>
+              </div>
+            ) : null}
             <hr className="f-width" />
             <div className="container d-flex flex-column align-items-center justify-content-center">
               <div className="form-group">
@@ -145,8 +175,12 @@ class RegisterForm extends Component {
               <div className="container">
                 <div className="psw">
                   <span className="link-container">
-                    <Link className="link" to="/login">Already have an account.</Link>
-                    <Link className="link" to="/">Back to blog posts</Link>
+                    <Link className="link" to="/login">
+                      Already have an account.
+                    </Link>
+                    <Link className="link" to="/">
+                      Back to blog posts
+                    </Link>
                   </span>
                 </div>
               </div>
@@ -160,6 +194,7 @@ class RegisterForm extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  errors: state.errors.errors,
 });
 
 export default connect(mapStateToProps, { register })(RegisterForm);

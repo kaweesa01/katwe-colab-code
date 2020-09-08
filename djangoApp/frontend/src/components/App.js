@@ -17,22 +17,41 @@ import AdminBoard from "../components/layouts/AdminBoard";
 
 import "../../styles/css/bootstrap.min.css";
 
+import { loadUser } from "../actions/auth";
+
+import { transitions, positions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+
+import Alert from "../alert/alert";
+
 class App extends Component {
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
+
   render() {
+    const options = {
+      positions: positions.TOP_CENTER,
+      timeout: 2000,
+      offset: "80px",
+      transition: transitions.SCALE,
+    };
     return (
       <Provider store={store}>
-        <Router>
-          <Fragment>
-            {/* <BlogForm /> */}
-            <Switch>
-              <PrivateRoute exact path="/blogForm" component={BlogForm} />
-              <PrivateRoute exact path="/adminBoard" component={AdminBoard} />
-              <Route exact path="/" component={BlogPost} />
-              <Route exact path="/register" component={RegisterForm} />
-              <Route exact path="/login" component={LoginForm} />
-            </Switch>
-          </Fragment>
-        </Router>
+        <AlertProvider template={AlertTemplate} {...options}>
+          <Router>
+            <Fragment>
+              <Alert />
+              <Switch>
+                <PrivateRoute exact path="/blogForm" component={BlogForm} />
+                <PrivateRoute exact path="/adminBoard" component={AdminBoard} />
+                <Route exact path="/" component={BlogPost} />
+                <Route exact path="/register" component={RegisterForm} />
+                <Route exact path="/login" component={LoginForm} />
+              </Switch>
+            </Fragment>
+          </Router>
+        </AlertProvider>
       </Provider>
     );
   }

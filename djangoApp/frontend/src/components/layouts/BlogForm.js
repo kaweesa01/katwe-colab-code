@@ -168,6 +168,22 @@ class BlogForm extends Component {
                 <form onSubmit={this.onSubmit}>
                   <div className="card-img-top"></div>
 
+                  {this.props.errors.length === 0 ? null : this.props.errors[0]
+                      .blog ? (
+                    <div className="card-header">
+                      <div className="alert alert-danger alert-dismissible fade show">
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="alert"
+                        >
+                          &times;
+                        </button>
+                        <strong>Error!</strong> {this.props.errors[0].blog}
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="card-body">
                     <textarea
                       onChange={this.onChange}
@@ -178,6 +194,23 @@ class BlogForm extends Component {
                       rows="10"
                     ></textarea>
                   </div>
+
+                  {this.props.errors.length === 0 ? null : this.props.errors[0]
+                      .image ? (
+                    <div className="card-header">
+                      <div className="alert alert-danger alert-dismissible fade show">
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="alert"
+                        >
+                          &times;
+                        </button>
+                        <strong>Error!</strong>{" "}
+                        {this.props.errors[0].image[0].split(".")[0]}
+                      </div>
+                    </div>
+                  ) : null}
 
                   <div className="card-footer text-muted">
                     <input
@@ -211,9 +244,13 @@ class BlogForm extends Component {
 
               <div className="card my-4">
                 <h5 className="card-header">Your Posts</h5>
-                {this.props.posts.length === 0
-                  ? <p className="text-center lead">You haven't shared any knownledge</p>
-                  : blogs}
+                {this.props.posts.length === 0 ? (
+                  <p className="text-center lead">
+                    You haven't shared any knownledge
+                  </p>
+                ) : (
+                  blogs
+                )}
               </div>
             </div>
           </div>
@@ -227,6 +264,7 @@ const mapStateToProps = (state) => ({
   posts: state.BlogReducer.userBlogPosts,
   blogEdit: state.BlogReducer.blogEdit,
   user: state.auth.user.username,
+  errors: state.errors.errors,
 });
 
 export default connect(mapStateToProps, {

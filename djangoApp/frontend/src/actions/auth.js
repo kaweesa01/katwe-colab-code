@@ -9,11 +9,15 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  REMOVE_ERRORS,
+  GET_ERRORS
 } from "./types";
 
 export const loadUser = () => (dispatch, getState) => {
   //User Loading
   dispatch({ type: USER_LOADING });
+
+  dispatch({ type: REMOVE_ERRORS });
 
   axios
     .get("/api/auth/user", tokenConfig(getState))
@@ -24,7 +28,7 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
-     // console.log(err.response);
+      // console.log(err.response);
       dispatch({
         type: AUTH_ERROR,
       });
@@ -51,7 +55,10 @@ export const login = (username, password) => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err.response);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
       dispatch({
         type: LOGIN_FAIL,
       });
@@ -69,10 +76,6 @@ export const logoutUser = () => (dispatch, getState) => {
     })
     .catch((err) => {
       console.log(err.response);
-      // dispatch({
-      //   type: SEND_ERRORS,
-      //   payload: { msg: err.response.data, status: err.status },
-      // });
     });
 };
 
@@ -97,6 +100,10 @@ export const register = ({ username, email, password }) => (dispatch) => {
       });
     })
     .catch((err) => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
       dispatch({
         type: REGISTER_FAIL,
       });
