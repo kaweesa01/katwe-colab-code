@@ -7,14 +7,18 @@ import {
   GET_USER_BLOG_POSTS,
   ADMIN_DELETE_BLOG_POSTS,
   SEARCH_BLOG,
+  GET_ADMIN_BLOG_POSTS,
   CANCEL_SEARCH,
 } from "../actions/types";
 
 const initialstate = {
   blogPosts: [],
+  adminBlogPosts: [],
   userBlogPosts: [],
   blogEdit: {},
   searchArray: [],
+  next: "",
+  previous: "",
 };
 
 export default function (state = initialstate, action) {
@@ -32,7 +36,9 @@ export default function (state = initialstate, action) {
     case GET_BLOG_POSTS:
       return {
         ...state,
-        blogPosts: [...action.payload],
+        next: action.payload.next,
+        previous: action.payload.previous,
+        blogPosts: [...action.payload.results],
       };
     case SEARCH_BLOG:
       return {
@@ -51,11 +57,16 @@ export default function (state = initialstate, action) {
           ...state.userBlogPosts.filter((cur) => cur.id !== action.payload),
         ],
       };
+    case GET_ADMIN_BLOG_POSTS:
+      return {
+        ...state,
+        adminBlogPosts: [...action.payload],
+      };
     case ADMIN_DELETE_BLOG_POSTS:
       return {
         ...state,
-        blogPosts: [
-          ...state.blogPosts.filter((cur) => cur.id !== action.payload),
+        adminBlogPosts: [
+          ...state.adminBlogPosts.filter((cur) => cur.id !== action.payload),
         ],
       };
     case GET_EDIT_BLOG_POST:

@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
 import marked from "marked";
 import {
-  getBlog,
   adminDeleteBlog,
+  getAdminBlog,
   searchBlog,
   cancelSearch,
 } from "../../actions/BlogActions";
@@ -22,7 +22,7 @@ class AdminBoard extends Component {
   }
 
   componentDidMount() {
-    this.props.getBlog();
+    this.props.getAdminBlog();
   }
 
   dateFormatter(date) {
@@ -162,20 +162,20 @@ class AdminBoard extends Component {
               <div className="card my-4">
                 <h5 className="card-header">Search</h5>
                 {this.props.errors.length === 0 ? null : this.props.errors[0]
-                      .msg ? (
-                    <div className="card-header">
-                      <div className="alert alert-danger alert-dismissible fade show">
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="alert"
-                        >
-                          &times;
-                        </button>
-                        <strong>Error!</strong> {this.props.errors[0].msg}
-                      </div>
+                    .msg ? (
+                  <div className="card-header">
+                    <div className="alert alert-danger alert-dismissible fade show">
+                      <button
+                        type="button"
+                        className="close"
+                        data-dismiss="alert"
+                      >
+                        &times;
+                      </button>
+                      <strong>Error!</strong> {this.props.errors[0].msg}
                     </div>
-                  ) : null}
+                  </div>
+                ) : null}
                 <div className="card-body">
                   <div className="input-group">
                     <input
@@ -227,19 +227,27 @@ class AdminBoard extends Component {
             </div>
           </div>
         </div>
+
+        <footer className="py-5 bg-dark">
+          <div className="container">
+            <p className="m-0 text-center text-white">
+              Copyright &copy; Your Website 2020
+            </p>
+          </div>
+        </footer>
       </Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  posts: state.BlogReducer.blogPosts,
+  posts: state.BlogReducer.adminBlogPosts,
   searchPosts: state.BlogReducer.searchArray,
   errors: state.errors.errors,
 });
 
 export default connect(mapStateToProps, {
-  getBlog,
+  getAdminBlog,
   adminDeleteBlog,
   logoutUser,
   searchBlog,

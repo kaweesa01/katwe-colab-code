@@ -11,13 +11,14 @@ import {
   GET_ERRORS,
   REMOVE_ERRORS,
   GET_MESSAGE,
+  GET_ADMIN_BLOG_POSTS
 } from "./types";
 import axios from "axios";
 import { tokenConfig } from "./auth";
 
-export const getBlog = () => (dispatch) => {
+export const getBlog = ( url ) => (dispatch) => {
   axios
-    .get("/api/blog/")
+    .get(url)
     .then((res) => {
       dispatch({
         type: GET_BLOG_POSTS,
@@ -29,10 +30,9 @@ export const getBlog = () => (dispatch) => {
     });
 };
 
-export const adminDeleteBlog = (id) => (dispatch) => {
-  console.log(id);
+export const adminDeleteBlog = (id) => (dispatch,getState) => {
   axios
-    .delete(`/api/blog/${id}/`)
+    .delete(`/api/admin/blog/${id}/`,tokenConfig(getState))
     .then(
       dispatch({ type: GET_MESSAGE, payload: { delete: "Blog post deleted" } }),
       dispatch({
@@ -41,6 +41,21 @@ export const adminDeleteBlog = (id) => (dispatch) => {
       })
     )
     .catch((err) => console.log(err.response));
+};
+
+export const getAdminBlog = () => (dispatch, getState) => {
+  axios
+    .get("/api/admin/blog", tokenConfig(getState))
+    .then((res) => {
+      dispatch({ type: REMOVE_ERRORS });
+      dispatch({
+        type: GET_ADMIN_BLOG_POSTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      // console.log(err.response);
+    });
 };
 
 export const getUserBlog = () => (dispatch, getState) => {
@@ -108,7 +123,6 @@ export const editBlog = (id, blog) => (dispatch, getState) => {
 };
 
 export const deleteBlog = (id) => (dispatch, getState) => {
-  console.log(id);
   axios
     .delete(`/api/userBlog/${id}/`, tokenConfig(getState))
     .then(

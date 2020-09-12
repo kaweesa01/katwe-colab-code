@@ -1,5 +1,6 @@
 from Blog.models import ImagesModel,BlogModel
 from rest_framework import permissions, viewsets
+from rest_framework.pagination import PageNumberPagination
 from .serializers import BlogSerializer,ImageSerializer
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
@@ -15,10 +16,28 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 # Blog view set
 
-class BlogViewSet(viewsets.ModelViewSet):
+class BlogPaginationSet(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 2000
+
+class BlogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BlogModel.objects.all().order_by('-date')
     permission_classes = [
         permissions.AllowAny
+    ]
+    pagination_class = BlogPaginationSet
+    serializer_class = BlogSerializer
+    parser_classes = (JSONParser, FormParser, MultiPartParser)
+    
+    def delete(self, request, format=None):
+      BlogModel.image.delete(save=True)
+      return Response(status=status.HTTP_204_NO_CONTENT)
+  
+class AdminBlogViewSet(viewsets.ModelViewSet):
+    queryset = BlogModel.objects.all().order_by('-date')
+    permission_classes = [
+        permissions.IsAuthenticated
     ]
     serializer_class = BlogSerializer
     parser_classes = (JSONParser, FormParser, MultiPartParser)

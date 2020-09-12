@@ -13,6 +13,7 @@ import { loadUser } from "../../actions/auth";
 import "../../../styles/css/blog-home.css";
 
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "jquery/dist/jquery.min.js";
 
 class BlogPost extends Component {
   constructor() {
@@ -23,10 +24,13 @@ class BlogPost extends Component {
     this.onChange = this.onChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.cancelSearch = this.cancelSearch.bind(this);
+    this.navigatePage = this.navigatePage.bind(this);
   }
 
   componentDidMount() {
-    this.props.getBlog();
+    const url = "/api/blog/";
+
+    this.props.getBlog(url);
     this.props.loadUser();
     this.props.getUserBlog();
   }
@@ -46,6 +50,10 @@ class BlogPost extends Component {
     this.setState({
       [ev.target.name]: ev.target.value,
     });
+  }
+
+  navigatePage(ev) {
+    this.props.getBlog(ev.target.name);
   }
 
   handleSearch() {
@@ -170,6 +178,34 @@ class BlogPost extends Component {
               </h1>
 
               <div>{postCard}</div>
+
+              {/* <!-- Pagination --> */}
+              <ul className="pagination justify-content-center mb-4">
+                {this.props.nextPrev.previous !== null ? (
+                  <li className="page-item">
+                    <a
+                      onClick={this.navigatePage}
+                      href="#"
+                      name={this.props.nextPrev.previous}
+                      className="btn btn-link"
+                    >
+                      &larr; Previous
+                    </a>
+                  </li>
+                ) : null}
+                {this.props.nextPrev.next !== null ? (
+                  <li className="page-item">
+                    <a
+                      onClick={this.navigatePage}
+                      href="#"
+                      name={this.props.nextPrev.next}
+                      className="btn btn-link"
+                    >
+                      Next &rarr;
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
             </div>
 
             {/* <!-- Sidebar Widgets Column --> */}
@@ -177,26 +213,25 @@ class BlogPost extends Component {
               {/* <!-- Search Widget --> */}
               <div className="card my-4">
                 <h5 className="card-header">Search</h5>
-                
+
                 {this.props.errors.length === 0 ? null : this.props.errors[0]
-                      .msg ? (
-                    <div className="card-header">
-                      <div className="alert alert-danger alert-dismissible fade show">
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="alert"
-                        >
-                          &times;
-                        </button>
-                        <strong>Error!</strong> {this.props.errors[0].msg}
-                      </div>
+                    .msg ? (
+                  <div className="card-header">
+                    <div className="alert alert-danger alert-dismissible fade show">
+                      <button
+                        type="button"
+                        className="close"
+                        data-dismiss="alert"
+                      >
+                        &times;
+                      </button>
+                      <strong>Error!</strong> {this.props.errors[0].msg}
                     </div>
-                  ) : null}
+                  </div>
+                ) : null}
 
                 <div className="card-body">
                   <div className="input-group">
-
                     <input
                       type="text"
                       className="form-control"
@@ -246,6 +281,14 @@ class BlogPost extends Component {
             </div>
           </div>
         </div>
+
+        <footer className="py-5 bg-dark">
+          <div className="container">
+            <p className="m-0 text-center text-white">
+              Copyright &copy; Your Website 2020
+            </p>
+          </div>
+        </footer>
       </Fragment>
     );
   }
@@ -253,6 +296,7 @@ class BlogPost extends Component {
 
 const mapSateToProps = (state) => ({
   posts: state.BlogReducer.blogPosts,
+  nextPrev: state.BlogReducer,
   searchPosts: state.BlogReducer.searchArray,
   errors: state.errors.errors,
 });
