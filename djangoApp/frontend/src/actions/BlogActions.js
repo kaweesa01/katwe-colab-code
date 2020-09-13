@@ -11,6 +11,7 @@ import {
   GET_ERRORS,
   REMOVE_ERRORS,
   GET_MESSAGE,
+  READ_MORE,
   GET_ADMIN_BLOG_POSTS
 } from "./types";
 import axios from "axios";
@@ -29,6 +30,21 @@ export const getBlog = ( url ) => (dispatch) => {
       console.log(err.response);
     });
 };
+
+export const readMore = ( id ) => (dispatch) => {
+  axios
+    .get(`/api/blog/${id}/`)
+    .then((res) => {
+      dispatch({
+        type: READ_MORE,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+};
+
 
 export const adminDeleteBlog = (id) => (dispatch,getState) => {
   axios

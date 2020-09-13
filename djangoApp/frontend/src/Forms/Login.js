@@ -31,6 +31,10 @@ class LoginForm extends Component {
   }
 
   componentDidMount() {
+    document.documentElement.style.setProperty(
+      "--topPadding",
+      `0px`
+    );
     axios
       .get("/api/logo/")
       .then((res) => {

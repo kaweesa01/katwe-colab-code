@@ -8,6 +8,7 @@ export const GET_EDIT_BLOG_POST = "GET_EDIT_BLOG_POST";
 export const EDIT_BLOG_POST = "EDIT_BLOG_POST";
 export const SEARCH_BLOG = "SEARCH_BLOG";
 export const CANCEL_SEARCH = "CANCEL_SEARCH";
+export const READ_MORE = "READ_MORE";
 
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";

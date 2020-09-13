@@ -5,26 +5,29 @@ import {
   getBlog,
   getUserBlog,
   searchBlog,
+  readMore,
   cancelSearch,
 } from "../../actions/BlogActions";
 import marked from "marked";
 import { Link } from "react-router-dom";
 import { loadUser } from "../../actions/auth";
 import "../../../styles/css/blog-home.css";
-
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "jquery/dist/jquery.min.js";
+import axios from "axios";
 
 class BlogPost extends Component {
   constructor() {
     super();
     this.state = {
       search: "",
+      logoUrl: "",
     };
     this.onChange = this.onChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.cancelSearch = this.cancelSearch.bind(this);
     this.navigatePage = this.navigatePage.bind(this);
+    this.Converter = this.Converter.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +36,19 @@ class BlogPost extends Component {
     this.props.getBlog(url);
     this.props.loadUser();
     this.props.getUserBlog();
+
+    document.documentElement.style.setProperty("--topPadding", `90px`);
+
+    axios
+      .get("/api/logo/")
+      .then((res) => {
+        this.setState({
+          logoUrl: res.data[0].image,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   dateFormatter(date) {
@@ -70,6 +86,33 @@ class BlogPost extends Component {
     });
   }
 
+  Converter = (content, limit = 150) => {
+    const newContent = [];
+    if (content.length > limit) {
+      content.split(" ").reduce((acc, cur) => {
+        if (acc + cur.length <= limit) {
+          newContent.push(cur);
+        }
+        return acc + cur.length;
+      }, 0);
+
+      // return the result
+      const filtered = newContent.filter((cur) => {
+        return cur != "";
+      });
+      return `${filtered.join(" ")} ...`;
+    }
+    return content;
+  };
+
+  getLength(content) {
+    const newArray = content.split(" ");
+    const filtered = newArray.filter((cur) => {
+      return cur != "";
+    });
+    return filtered.length;
+  }
+
   render() {
     const { posts, searchPosts } = this.props;
 
@@ -86,10 +129,21 @@ class BlogPost extends Component {
               alt="Card image cap"
             />
             <div className="card-body">
-              <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
-              <a href="#" className="btn btn-primary">
-                Read More &rarr;
-              </a>
+              <div
+                dangerouslySetInnerHTML={this.getMarkdownText(
+                  this.Converter(post.blog)
+                )}
+              />
+
+              {this.getLength(post.blog) < 31 ? null : (
+                <Link
+                  to="/readMore"
+                  onClick={this.props.readMore.bind(this, post.id)}
+                  className="btn btn-primary"
+                >
+                  Read More &rarr;
+                </Link>
+              )}
             </div>
             <div className="card-footer text-muted">
               Posted on {this.dateFormatter(post.date)} by {post.creator}
@@ -109,9 +163,9 @@ class BlogPost extends Component {
             />
             <div className="card-body">
               <div dangerouslySetInnerHTML={this.getMarkdownText(post.blog)} />
-              <a href="#" className="btn btn-primary">
+              {/* <a href="#" className="btn btn-primary">
                 Read More &rarr;
-              </a>
+              </a> */}
             </div>
             <div className="card-footer text-muted">
               Posted on {this.dateFormatter(post.date)} by {post.creator}
@@ -123,10 +177,10 @@ class BlogPost extends Component {
 
     return (
       <Fragment>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
-              Katwe colab
+              <img width="50px" height="50px" src={this.state.logoUrl} />
             </a>
             <button
               className="navbar-toggler"
@@ -243,7 +297,7 @@ class BlogPost extends Component {
                     <span className="input-group-append">
                       <button
                         onClick={this.handleSearch}
-                        className="btn btn-secondary"
+                        className="btn btn-primary"
                         type="button"
                       >
                         Go!
@@ -275,17 +329,20 @@ class BlogPost extends Component {
               <div className="card my-4">
                 <h5 className="card-header">Quote of the day</h5>
                 <div className="card-body">
-                  A house divided against it's self cannot stand
+                  <blockquote className="blockquote">
+                    <p>A house divided against it's self cannot stand.</p>
+                    <footer className="blockquote-footer">By Kaweesa</footer>
+                  </blockquote>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <footer className="py-5 bg-dark">
+        <footer className="py-5 bg-primary">
           <div className="container">
             <p className="m-0 text-center text-white">
-              Copyright &copy; Your Website 2020
+              Copyright &copy; Katwe Colab 2020
             </p>
           </div>
         </footer>
@@ -303,6 +360,7 @@ const mapSateToProps = (state) => ({
 
 export default connect(mapSateToProps, {
   getBlog,
+  readMore,
   loadUser,
   getUserBlog,
   searchBlog,

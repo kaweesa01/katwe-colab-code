@@ -41,6 +41,7 @@ class BlogForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    document.documentElement.style.setProperty("--topPadding", `90px`);
     if (prevProps.blogEdit !== this.props.blogEdit) {
       this.setState(this.props.blogEdit);
     }
@@ -69,7 +70,7 @@ class BlogForm extends Component {
     this.setState({
       id: null,
       image: null,
-      blog: ""
+      blog: "",
     });
   }
 
@@ -113,7 +114,7 @@ class BlogForm extends Component {
     });
     return (
       <Fragment>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
               Katwe colab
@@ -225,7 +226,7 @@ class BlogForm extends Component {
                       onChange={this.handleImage}
                     />
 
-                    <button className="btn btn-secondary m-1" type="submit">
+                    <button className="btn btn-primary m-1" type="submit">
                       Submit
                     </button>
                   </div>
@@ -261,10 +262,10 @@ class BlogForm extends Component {
             </div>
           </div>
         </div>
-        <footer className="py-5 bg-dark">
+        <footer className="py-5 bg-primary">
           <div className="container">
             <p className="m-0 text-center text-white">
-              Copyright &copy; Your Website 2020
+              Copyright &copy; Katwe Colab 2020
             </p>
           </div>
         </footer>

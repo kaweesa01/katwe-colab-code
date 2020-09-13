@@ -22,6 +22,10 @@ class AdminBoard extends Component {
   }
 
   componentDidMount() {
+    document.documentElement.style.setProperty(
+      "--topPadding",
+      `90px`
+    );
     this.props.getAdminBlog();
   }
 
@@ -113,7 +117,7 @@ class AdminBoard extends Component {
 
     return (
       <Fragment>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
               Katwe colab
@@ -188,7 +192,7 @@ class AdminBoard extends Component {
                     />
                     <span className="input-group-append">
                       <button
-                        className="btn btn-secondary"
+                        className="btn btn-primary"
                         onClick={this.handleSearch}
                         type="button"
                       >
@@ -228,10 +232,10 @@ class AdminBoard extends Component {
           </div>
         </div>
 
-        <footer className="py-5 bg-dark">
+        <footer className="py-5 bg-primary">
           <div className="container">
             <p className="m-0 text-center text-white">
-              Copyright &copy; Your Website 2020
+              Copyright &copy; Katwe Colab 2020
             </p>
           </div>
         </footer>

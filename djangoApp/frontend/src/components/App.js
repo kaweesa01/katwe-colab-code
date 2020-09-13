@@ -16,8 +16,8 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import AdminBoard from "../components/layouts/AdminBoard";
 
 import "../../styles/css/bootstrap.min.css";
-
 import { loadUser } from "../actions/auth";
+import ReadMore from "../components/layouts/readMore";
 
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
@@ -46,6 +46,7 @@ class App extends Component {
                 <PrivateRoute exact path="/blogForm" component={BlogForm} />
                 <PrivateRoute exact path="/adminBoard" component={AdminBoard} />
                 <Route exact path="/" component={BlogPost} />
+                <Route exact path="/readMore" component={ReadMore} />
                 <Route exact path="/register" component={RegisterForm} />
                 <Route exact path="/login" component={LoginForm} />
               </Switch>
