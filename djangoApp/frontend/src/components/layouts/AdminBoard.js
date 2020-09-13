@@ -9,12 +9,14 @@ import {
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/auth";
+import axios from "axios";
 
 class AdminBoard extends Component {
   constructor() {
     super();
     this.state = {
       search: "",
+      logoUrl: "",
     };
     this.onChange = this.onChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -22,11 +24,19 @@ class AdminBoard extends Component {
   }
 
   componentDidMount() {
-    document.documentElement.style.setProperty(
-      "--topPadding",
-      `90px`
-    );
+    document.documentElement.style.setProperty("--topPadding", `90px`);
     this.props.getAdminBlog();
+
+    axios
+      .get("/api/logo/")
+      .then((res) => {
+        this.setState({
+          logoUrl: res.data[0].image,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   dateFormatter(date) {
@@ -120,7 +130,7 @@ class AdminBoard extends Component {
         <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
-              Katwe colab
+              <img width="50px" height="50px" src={this.state.logoUrl} />
             </a>
             <button
               className="navbar-toggler"

@@ -5,7 +5,7 @@ import Proptypes from "prop-types";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/auth";
 import { getUserBlog } from "../../actions/BlogActions";
-
+import axios from 'axios'
 import {
   addBlog,
   deleteBlog,
@@ -21,6 +21,7 @@ class BlogForm extends Component {
       id: null,
       image: null,
       blog: "",
+      logoUrl: "",
       imageUrl: null,
       creator: this.props.user,
     };
@@ -45,6 +46,16 @@ class BlogForm extends Component {
     if (prevProps.blogEdit !== this.props.blogEdit) {
       this.setState(this.props.blogEdit);
     }
+    axios
+      .get("/api/logo/")
+      .then((res) => {
+        this.setState({
+          logoUrl: res.data[0].image,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   onSubmit(ev) {
@@ -117,7 +128,7 @@ class BlogForm extends Component {
         <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
           <div className="container">
             <a className="navbar-brand" href="#">
-              Katwe colab
+              <img width="50px" height="50px" src={this.state.logoUrl} />
             </a>
             <button
               className="navbar-toggler"
