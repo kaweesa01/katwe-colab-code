@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react";
 import marked from "marked";
 import { connect } from "react-redux";
-import Proptypes from "prop-types";
-import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/auth";
 import { getUserBlog } from "../../actions/BlogActions";
 import axios from 'axios'

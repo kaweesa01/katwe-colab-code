@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import marked from "marked";
 import { Link } from "react-router-dom";
 import "../../../styles/css/blog-home.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import axios from "axios";
+import { getQuote } from "../../actions/quote";
 
 class ReadMore extends Component {
   constructor() {
@@ -17,6 +17,8 @@ class ReadMore extends Component {
 
   componentDidMount() {
     document.documentElement.style.setProperty("--topPadding", `90px`);
+    this.props.getQuote();
+
     axios
       .get("/api/logo/")
       .then((res) => {
@@ -35,7 +37,7 @@ class ReadMore extends Component {
   }
 
   render() {
-    const { post } = this.props;
+    const { post ,quote} = this.props;
     return (
       <Fragment>
         <nav className="navbar navbar-expand-lg navbar-light shadow-lg bg-light fixed-top">
@@ -122,10 +124,14 @@ class ReadMore extends Component {
               <div className="card my-4">
                 <h5 className="card-header">Quote of the day</h5>
                 <div className="card-body">
-                  <blockquote className="blockquote">
-                    <p>A house divided against it's self cannot stand.</p>
-                    <footer className="blockquote-footer">By Kaweesa</footer>
-                  </blockquote>
+                  <div className="card-body">
+                    <blockquote className="blockquote">
+                      <p>{quote.quote}</p>
+                      <footer className="blockquote-footer">
+                        By {quote.title}{" "}
+                      </footer>
+                    </blockquote>
+                  </div>
                 </div>
               </div>
             </div>
@@ -146,6 +152,7 @@ class ReadMore extends Component {
 
 const mapSateToProps = (state) => ({
   post: state.readMore.post,
+  quote: state.quotes.quote,
 });
 
-export default connect(mapSateToProps, {})(ReadMore);
+export default connect(mapSateToProps, { getQuote})(ReadMore);

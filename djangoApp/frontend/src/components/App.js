@@ -24,6 +24,9 @@ import AlertTemplate from "react-alert-template-basic";
 
 import Alert from "../alert/alert";
 
+
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 class App extends Component {
   componentDidMount() {
     store.dispatch(loadUser());

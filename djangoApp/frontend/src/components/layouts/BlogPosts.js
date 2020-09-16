@@ -12,9 +12,8 @@ import marked from "marked";
 import { Link } from "react-router-dom";
 import { loadUser } from "../../actions/auth";
 import "../../../styles/css/blog-home.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "jquery/dist/jquery.min.js";
 import axios from "axios";
+import { getQuote } from "../../actions/quote";
 
 class BlogPost extends Component {
   constructor() {
@@ -36,6 +35,7 @@ class BlogPost extends Component {
     this.props.getBlog(url);
     this.props.loadUser();
     this.props.getUserBlog();
+    this.props.getQuote();
 
     document.documentElement.style.setProperty("--topPadding", `90px`);
 
@@ -114,7 +114,7 @@ class BlogPost extends Component {
   }
 
   render() {
-    const { posts, searchPosts } = this.props;
+    const { posts, searchPosts,quote } = this.props;
 
     var postCard = null;
 
@@ -329,10 +329,14 @@ class BlogPost extends Component {
               <div className="card my-4">
                 <h5 className="card-header">Quote of the day</h5>
                 <div className="card-body">
-                  <blockquote className="blockquote">
-                    <p>A house divided against it's self cannot stand.</p>
-                    <footer className="blockquote-footer">By Kaweesa</footer>
-                  </blockquote>
+                  <div className="card-body">
+                    <blockquote className="blockquote">
+                      <p>{quote.quote}</p>
+                      <footer className="blockquote-footer">
+                        By {quote.title}{" "}
+                      </footer>
+                    </blockquote>
+                  </div>
                 </div>
               </div>
             </div>
@@ -356,6 +360,7 @@ const mapSateToProps = (state) => ({
   nextPrev: state.BlogReducer,
   searchPosts: state.BlogReducer.searchArray,
   errors: state.errors.errors,
+  quote: state.quotes.quote,
 });
 
 export default connect(mapSateToProps, {
@@ -365,4 +370,5 @@ export default connect(mapSateToProps, {
   getUserBlog,
   searchBlog,
   cancelSearch,
+  getQuote,
 })(BlogPost);

@@ -10,6 +10,8 @@ export const SEARCH_BLOG = "SEARCH_BLOG";
 export const CANCEL_SEARCH = "CANCEL_SEARCH";
 export const READ_MORE = "READ_MORE";
 
+export const GET_QUOTE = "GET_QUOTE";
+
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -21,4 +23,4 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 
 export const GET_ERRORS = "GET_ERRORS";
 export const REMOVE_ERRORS = "REMOVE_ERRORS";
-export const GET_MESSAGE = "GET_MESSAGE"
+export const GET_MESSAGE = "GET_MESSAGE";

@@ -7,9 +7,9 @@ import {
   cancelSearch,
 } from "../../actions/BlogActions";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/auth";
 import axios from "axios";
+import { getQuote } from "../../actions/quote";
 
 class AdminBoard extends Component {
   constructor() {
@@ -26,6 +26,7 @@ class AdminBoard extends Component {
   componentDidMount() {
     document.documentElement.style.setProperty("--topPadding", `90px`);
     this.props.getAdminBlog();
+    this.props.getQuote();
 
     axios
       .get("/api/logo/")
@@ -71,7 +72,7 @@ class AdminBoard extends Component {
   }
 
   render() {
-    const { posts, searchPosts } = this.props;
+    const { posts, searchPosts ,quote} = this.props;
 
     var blogs = null;
 
@@ -235,7 +236,14 @@ class AdminBoard extends Component {
               <div className="card my-4">
                 <h5 className="card-header">Quote of the day</h5>
                 <div className="card-body">
-                  A house divided against it's self cannot stand
+                  <div className="card-body">
+                    <blockquote className="blockquote">
+                      <p>{quote.quote}</p>
+                      <footer className="blockquote-footer">
+                        By {quote.title}{" "}
+                      </footer>
+                    </blockquote>
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,6 +266,7 @@ const mapStateToProps = (state) => ({
   posts: state.BlogReducer.adminBlogPosts,
   searchPosts: state.BlogReducer.searchArray,
   errors: state.errors.errors,
+  quote: state.quotes.quote,
 });
 
 export default connect(mapStateToProps, {
@@ -266,4 +275,5 @@ export default connect(mapStateToProps, {
   logoutUser,
   searchBlog,
   cancelSearch,
+  getQuote,
 })(AdminBoard);
